@@ -40,11 +40,6 @@ void ImprimirTablero(char tablero[8][8])
 	}
 }
 
-
-
-
-
-
 int main()
 {
 	char tablero[8][8];
