@@ -34,38 +34,9 @@ bool CasillaAtacada(int t[2][2], int fila, int colm)
 {
 	for (int k = 0; k < 2; k++)
 	{
-		int tFila = t[k][0];
-		int tColm = t[k][1];
-		int otraTorre = 1 - k; 
-
-		if (fila == tFila && colm != tColm)
+		if (fila == t[k][0] || colm == t[k][1])
 		{
-			bool bloqueada = false;
-			if (t[otraTorre][0] == tFila)
-			{
-				int menor = (tColm < colm) ? tColm : colm;
-				int mayor = (tColm < colm) ? colm : tColm;
-				if (t[otraTorre][1] > menor && t[otraTorre][1] < mayor)
-				{
-					bloqueada = true;
-				}
-			}
-			if (!bloqueada) return true;
-		}
-
-		if (colm == tColm && fila != tFila)
-		{
-			bool bloqueada = false;
-			if (t[otraTorre][1] == tColm)
-			{
-				int menor = (tFila < fila) ? tFila : fila;
-				int mayor = (tFila < fila) ? fila : tFila;
-				if (t[otraTorre][0] > menor && t[otraTorre][0] < mayor)
-				{
-					bloqueada = true;
-				}
-			}
-			if (!bloqueada) return true;
+			return true;
 		}
 	}
 	return false;
