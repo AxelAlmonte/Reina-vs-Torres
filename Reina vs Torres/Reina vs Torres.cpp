@@ -1,5 +1,5 @@
 /*
-
+Fecha: 8/10/26
 Grupo 1:
 - Alessandro Salamone - 1132116
 - Carlos Minaya - 1132836
@@ -8,6 +8,8 @@ Grupo 1:
 - José Pinales - 1133255
 - Christian Acosta - 1132698
 
+Realizar un programa C++ que genere los movimientos posibles (según las reglas del ajedrez)
+de una Reina amenazada por dos Torres enemigas. 
 */
 #include <iostream>
 #include <string>
