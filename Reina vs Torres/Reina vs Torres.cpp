@@ -83,7 +83,7 @@ void ImprimirTablero(char tablero[8][8])
 	}
 }
 
-void leerEntero(string mensaje, int& pDato)
+void leerEntero(string mensaje, int& pDato, int minimo, int maximo)
 {
 	string datoString;
 	size_t position;
@@ -97,11 +97,18 @@ void leerEntero(string mensaje, int& pDato)
 			cin >> datoString;
 			pDato = stoi(datoString, &position);
 
-			if (datoString.length() != position) {
+			if (datoString.length() != position)
+			{
 				error = true;
 				cout << "Entrada invalida, ingrese un numero entero\n" << endl;
 			}
-			else {
+			else if (pDato < minimo || pDato > maximo)
+			{
+				error = true;
+				cout << "El numero debe estar entre " << minimo << " y " << maximo << ".\n" << endl;
+			}
+			else
+			{
 				error = false;
 			}
 		}
@@ -129,35 +136,18 @@ int main()
 		cout << "Reina vs Torres" << endl;
 
 		// Torre 1
-		do {
-			leerEntero("Inserte la fila de la primera torre: ", t[0][0]); t[0][0]--;
-			leerEntero("Inserte la columna de la primera torre: ", t[0][1]); t[0][1]--;
-
-			if (t[0][0] < 0 || t[0][0] > 7 || t[0][1] < 0 || t[0][1] > 7)
-			{
-				valido = false;
-				cout << "Error: la fila y la columna deben estar entre 1 y 8.\n" << endl;
-			}
-			else
-			{
-				valido = true;
-			}
-		} while (!valido);
+		leerEntero("Inserte la fila de la primera torre: ", t[0][0], 1, 8); t[0][0]--;
+		leerEntero("Inserte la columna de la primera torre: ", t[0][1], 1, 8); t[0][1]--;
 
 		// Torre 2
 		do {
-			leerEntero("Inserte la fila de la segunda torre: ", t[1][0]); t[1][0]--;
-			leerEntero("Inserte la columna de la segunda torre: ", t[1][1]); t[1][1]--;
+			leerEntero("Inserte la fila de la segunda torre: ", t[1][0], 1, 8); t[1][0]--;
+			leerEntero("Inserte la columna de la segunda torre: ", t[1][1], 1, 8); t[1][1]--;
 
-			if (t[1][0] < 0 || t[1][0] > 7 || t[1][1] < 0 || t[1][1] > 7)
+			if (t[1][0] == t[0][0] && t[1][1] == t[0][1])
 			{
 				valido = false;
-				cout << "La fila y la columna deben estar entre 1 y 8.\n" << endl;
-			}
-			else if (t[1][0] == t[0][0] && t[1][1] == t[0][1])
-			{
-				valido = false;
-				cout << "Esa casilla ya esta ocupada por la primera torre.\n" << endl;
+				cout << "Error: esa casilla ya esta ocupada por la primera torre.\n" << endl;
 			}
 			else
 			{
@@ -167,15 +157,10 @@ int main()
 
 		// Reina
 		do {
-			leerEntero("Inserte la fila de la reina: ", rx); rx--;
-			leerEntero("Inserte la columna de la reina: ", ry); ry--;
+			leerEntero("Inserte la fila de la reina: ", rx, 1, 8); rx--;
+			leerEntero("Inserte la columna de la reina: ", ry, 1, 8); ry--;
 
-			if (rx < 0 || rx > 7 || ry < 0 || ry > 7)
-			{
-				valido = false;
-				cout << "Error: la fila y la columna deben estar entre 1 y 8.\n" << endl;
-			}
-			else if (rx == t[0][0] && ry == t[0][1])
+			if (rx == t[0][0] && ry == t[0][1])
 			{
 				valido = false;
 				cout << "Error: esa casilla ya esta ocupada por la primera torre.\n" << endl;
