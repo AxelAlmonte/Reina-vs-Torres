@@ -28,22 +28,22 @@ void InicializarTablero(char tablero[8][8], int t[2][2], int rx, int ry)
 }
 
 // Calcular ataques de las torres
-bool CasillaAtacada(int t[2][2], int f, int c)
+bool CasillaAtacada(int t[2][2], int fila, int colm)
 {
 	for (int k = 0; k < 2; k++)
 	{
-		int tf = t[k][0];
-		int tc = t[k][1];
-		int otra = 1 - k; 
+		int tFila = t[k][0];
+		int tColm = t[k][1];
+		int otraTorre = 1 - k; 
 
-		if (f == tf && c != tc)
+		if (fila == tFila && colm != tColm)
 		{
 			bool bloqueada = false;
-			if (t[otra][0] == tf)
+			if (t[otraTorre][0] == tFila)
 			{
-				int menor = (tc < c) ? tc : c;
-				int mayor = (tc < c) ? c : tc;
-				if (t[otra][1] > menor && t[otra][1] < mayor)
+				int menor = (tColm < colm) ? tColm : colm;
+				int mayor = (tColm < colm) ? colm : tColm;
+				if (t[otraTorre][1] > menor && t[otraTorre][1] < mayor)
 				{
 					bloqueada = true;
 				}
@@ -51,14 +51,14 @@ bool CasillaAtacada(int t[2][2], int f, int c)
 			if (!bloqueada) return true;
 		}
 
-		if (c == tc && f != tf)
+		if (colm == tColm && fila != tFila)
 		{
 			bool bloqueada = false;
-			if (t[otra][1] == tc)
+			if (t[otraTorre][1] == tColm)
 			{
-				int menor = (tf < f) ? tf : f;
-				int mayor = (tf < f) ? f : tf;
-				if (t[otra][0] > menor && t[otra][0] < mayor)
+				int menor = (tFila < fila) ? tFila : fila;
+				int mayor = (tFila < fila) ? fila : tFila;
+				if (t[otraTorre][0] > menor && t[otraTorre][0] < mayor)
 				{
 					bloqueada = true;
 				}
@@ -77,40 +77,34 @@ void MovimientosReina(char tablero[8][8], int t[2][2], int rx, int ry)
 
 	for (int d = 0; d < 8; d++)
 	{
-		int f = rx + di[d];
-		int c = ry + dj[d];
+		int fila = rx + di[d];
+		int colm = ry + dj[d];
 
-		while (f >= 0 && f <= 7 && c >= 0 && c <= 7)
+		while (fila >= 0 && fila <= 7 && colm >= 0 && colm <= 7 && tablero[fila][colm] != 'T')
 		{
-			if (tablero[f][c] == 'T')
+			if (CasillaAtacada(t, fila, colm))
 			{
-				break;
-			}
-
-			if (CasillaAtacada(t, f, c))
-			{
-				tablero[f][c] = 'X'; // peligrosa
+				tablero[fila][colm] = 'x'; // peligrosa
 			}
 			else
 			{
-				tablero[f][c] = 'V'; // segura
+				tablero[fila][colm] = 'v'; // segura
 			}
-
-			f += di[d];
-			c += dj[d];
+			fila += di[d];
+			colm += dj[d];
 		}
 	}
 }
 
 void ImprimirTablero(char tablero[8][8])
 {
-	cout << "    A  B  C  D  E  F  G  H " << endl;
+	cout << "     A   B   C   D   E   F   G   H " << endl;
 	for (int i = 0; i < 8; i++)
 	{
-		cout << i + 1 << "  |";
+		cout << i + 1 << "  | ";
 		for (int j = 0; j < 8; j++)
 		{
-			cout << tablero[i][j] << " |";
+			cout << tablero[i][j] << " | ";
 		}
 		cout << endl;
 	}
@@ -153,78 +147,89 @@ int main()
 	int rx;
 	int ry;
 	bool valido;
+	bool continuar = true;
+	char respuesta;
+	while (continuar)
+	{
+		system("cls");
 
-	cout << "Reina vs Torres" << endl;
+		cout << "Reina vs Torres" << endl;
 
-	// Torre 1
-	do {
-		leerEntero("Inserte la fila de la primera torre: ", t[0][0]); t[0][0]--;
-		leerEntero("Inserte la columna de la primera torre: ", t[0][1]); t[0][1]--;
+		// Torre 1
+		do {
+			leerEntero("Inserte la fila de la primera torre: ", t[0][0]); t[0][0]--;
+			leerEntero("Inserte la columna de la primera torre: ", t[0][1]); t[0][1]--;
 
-		if (t[0][0] < 0 || t[0][0] > 7 || t[0][1] < 0 || t[0][1] > 7)
-		{
-			valido = false;
-			cout << "Error: la fila y la columna deben estar entre 1 y 8.\n" << endl;
+			if (t[0][0] < 0 || t[0][0] > 7 || t[0][1] < 0 || t[0][1] > 7)
+			{
+				valido = false;
+				cout << "Error: la fila y la columna deben estar entre 1 y 8.\n" << endl;
+			}
+			else
+			{
+				valido = true;
+			}
+		} while (!valido);
+
+		// Torre 2
+		do {
+			leerEntero("Inserte la fila de la segunda torre: ", t[1][0]); t[1][0]--;
+			leerEntero("Inserte la columna de la segunda torre: ", t[1][1]); t[1][1]--;
+
+			if (t[1][0] < 0 || t[1][0] > 7 || t[1][1] < 0 || t[1][1] > 7)
+			{
+				valido = false;
+				cout << "La fila y la columna deben estar entre 1 y 8.\n" << endl;
+			}
+			else if (t[1][0] == t[0][0] && t[1][1] == t[0][1])
+			{
+				valido = false;
+				cout << "Esa casilla ya esta ocupada por la primera torre.\n" << endl;
+			}
+			else
+			{
+				valido = true;
+			}
+		} while (!valido);
+
+		// Reina
+		do {
+			leerEntero("Inserte la fila de la reina: ", rx); rx--;
+			leerEntero("Inserte la columna de la reina: ", ry); ry--;
+
+			if (rx < 0 || rx > 7 || ry < 0 || ry > 7)
+			{
+				valido = false;
+				cout << "Error: la fila y la columna deben estar entre 1 y 8.\n" << endl;
+			}
+			else if (rx == t[0][0] && ry == t[0][1])
+			{
+				valido = false;
+				cout << "Error: esa casilla ya esta ocupada por la primera torre.\n" << endl;
+			}
+			else if (rx == t[1][0] && ry == t[1][1])
+			{
+				valido = false;
+				cout << "Error: esa casilla ya esta ocupada por la segunda torre.\n" << endl;
+			}
+			else
+			{
+				valido = true;
+			}
+		} while (!valido);
+
+		InicializarTablero(tablero, t, rx, ry);
+
+		MovimientosReina(tablero, t, rx, ry);
+
+		cout << "\n\n";
+		ImprimirTablero(tablero);
+
+		cout << "\n\nDesea continuar? (s/n): ";
+		cin >> respuesta;
+		if (respuesta == 'n' || respuesta == 'N') {
+			continuar = false;
 		}
-		else
-		{
-			valido = true;
-		}
-	} while (!valido);
-
-	// Torre 2
-	do {
-		leerEntero("Inserte la fila de la segunda torre: ", t[1][0]); t[1][0]--;
-		leerEntero("Inserte la columna de la segunda torre: ", t[1][1]); t[1][1]--;
-
-		if (t[1][0] < 0 || t[1][0] > 7 || t[1][1] < 0 || t[1][1] > 7)
-		{
-			valido = false;
-			cout << "La fila y la columna deben estar entre 1 y 8.\n" << endl;
-		}
-		else if (t[1][0] == t[0][0] && t[1][1] == t[0][1])
-		{
-			valido = false;
-			cout << "Esa casilla ya esta ocupada por la primera torre.\n" << endl;
-		}
-		else
-		{
-			valido = true;
-		}
-	} while (!valido);
-
-	// Reina
-	do {
-		leerEntero("Inserte la fila de la reina: ", rx); rx--;
-		leerEntero("Inserte la columna de la reina: ", ry); ry--;
-
-		if (rx < 0 || rx > 7 || ry < 0 || ry > 7)
-		{
-			valido = false;
-			cout << "La fila y la columna deben estar entre 1 y 8.\n" << endl;
-		}
-		else if (rx == t[0][0] && ry == t[0][1])
-		{
-			valido = false;
-			cout << "Esa casilla ya esta ocupada por la primera torre.\n" << endl;
-		}
-		else if (rx == t[1][0] && ry == t[1][1])
-		{
-			valido = false;
-			cout << "Esa casilla ya esta ocupada por la segunda torre.\n" << endl;
-		}
-		else
-		{
-			valido = true;
-		}
-	} while (!valido);
-
-	InicializarTablero(tablero, t, rx, ry);
-
-	MovimientosReina(tablero, t, rx, ry);
-
-	cout << "\n\n";
-	ImprimirTablero(tablero);
-
+	}
 	return 0;
 }
